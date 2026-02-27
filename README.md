@@ -146,3 +146,154 @@ MIT License
 - Понимание asyncio
 - Знание aiogram 3.x
 - Опыт работы с SQLAlchemy
+- 
+
+EN
+# Twitch Stream Monitor Bot
+
+Telegram bot for tracking Twitch stream status. Allows users to add Twitch channels to their watchlist and receive notifications when streams go live or end.
+
+## 🚀 Features
+
+### For Users:
+- **👤 Profile** - View user information, number of tracked channels, and subscription status
+- **➕ Add Channels** - Add Twitch channels for tracking via link
+- **📋 Channel List** - View all added channels with their current status (online/offline)
+- **💎 Subscription** - Paid subscription to remove limitations
+- **🛠 Support** - Direct link to customer support
+
+### For Administrators:
+- **📊 Statistics** - General statistics on users, subscriptions, and channels
+- **💰 Price Management** - Change subscription price
+- **👥 User Management** - Ban/unban users
+- **💎 Grant Subscription** - Manually grant subscriptions to users
+- **📢 Broadcast** - Mass messaging to all users
+
+## 🛠 Tech Stack
+
+- **Python 3.10+**
+- **Aiogram 3.x** - Asynchronous framework for Telegram Bot API
+- **SQLAlchemy 2.0** - ORM for database operations
+- **SQLite + aiosqlite** - Database
+- **Twitch API** - Stream status verification
+- **YooMoney API** - Payment system integration
+
+## 📁 Project Structure
+
+```
+├── app.py                 # Main bot launch file
+├── config.py              # Configuration and tokens
+├── database/
+│   ├── engine.py          # Database connection setup
+│   ├── models.py          # SQLAlchemy models
+│   └── orm_query.py       # ORM queries
+├── filters/
+│   └── chat_types.py      # Filters for admin access
+├── handlers/
+│   ├── admin_private.py   # Admin commands
+│   ├── states.py          # FSM states
+│   └── user_private.py    # User commands
+├── kbrds/
+│   ├── inline.py          # Inline keyboards
+│   └── reply.py           # Reply keyboards
+├── middlewares/
+│   └── db.py              # Middleware for DB sessions
+└── services/
+    ├── datetime_service.py   # Date/time operations
+    ├── payment_service.py    # YooMoney integration
+    ├── stream_monitor.py     # Stream monitoring
+    └── twitch_checker.py     # Twitch API checker
+```
+
+## 📊 Data Models
+
+### User
+- `id` - Internal identifier
+- `user_id` - Telegram user ID
+- `reg_date` - Registration date
+- `is_banned` - Ban status
+- `channels` - Relationship with tracked channels
+- `subscription` - Relationship with subscription
+
+### TwitchChannel
+- `id` - Channel identifier
+- `channel_url` - Twitch channel URL
+- `channel_name` - Channel name
+- `is_live` - Current stream status
+- `last_checked` - Last check timestamp
+- `users` - Users tracking this channel
+
+### Subscription
+- `id` - Subscription identifier
+- `user_id` - Relationship with user
+- `is_active` - Whether subscription is active
+- `start_date` - Start date
+- `end_date` - End date
+- `payment_id` - YooMoney payment ID
+
+### SubscriptionSettings
+- `id` - Settings identifier
+- `price` - Subscription price
+- `updated_at` - Last update timestamp
+
+## 🔄 Workflow
+
+1. **Stream Monitoring** - All channels in the database are checked every 10 seconds
+2. **Status Verification** - Twitch API is used to determine online/offline status
+3. **Notifications** - When status changes, notifications are sent to all channel subscribers
+4. **Payments** - YooMoney integration for processing payments and automatic subscription activation
+
+## ⚙️ Installation & Setup
+
+1. **Clone the repository**
+```bash
+git clone https://github.com/yourusername/twitch-monitor-bot.git  
+cd twitch-monitor-bot
+```
+
+2. **Install dependencies**
+```bash
+pip install -r requirements.txt
+```
+
+3. **Configure settings**
+Create a `config.py` file:
+```python
+BOT_TOKEN = 'your_bot_token'
+ADMIN_ID = [your_telegram_id]
+
+DB_LITE = "sqlite+aiosqlite:///./database.db"
+
+SUPPORT_URL = "support_link"
+
+TWITCH_CLIENT_ID = "twitch_client_id"
+TWITCH_ACCESS_TOKEN = "twitch_access_token"
+
+YOOMONEY_WALLET_ID = "wallet_number"
+YOOMONEY_ACCESS_TOKEN = "yoomoney_token"
+YOOMONEY_NOTIFICATION_SECRET = "notification_secret"
+```
+
+4. **Launch the bot**
+```bash
+python app.py
+```
+
+## 🔐 Security
+
+- All tokens and keys are stored in a separate configuration file
+- Access control checks for admin commands
+- Middleware for managing database sessions
+- SQL injection protection via ORM
+
+## 📝 License
+
+MIT License
+
+## 👨‍💻 Development
+
+### Development Requirements
+- Python 3.10+
+- Understanding of asyncio
+- Knowledge of aiogram 3.x
+- Experience with SQLAlchemy
