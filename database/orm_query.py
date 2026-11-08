@@ -167,7 +167,6 @@ async def orm_check_subscription_active(session: AsyncSession, user_id: int) -> 
     return True
 
 
-# Обновим функцию orm_create_subscription
 async def orm_create_subscription(session: AsyncSession, user_id: int, days: int = 9999, payment_id: str = None):   
     user = await orm_get_user(session, user_id)
     if not user:

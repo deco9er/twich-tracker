@@ -86,7 +86,6 @@ async def admin_statistics(callback: types.CallbackQuery, session: AsyncSession)
 
 @admin_router.callback_query(F.data == "admin_price")
 async def admin_price_menu(callback: types.CallbackQuery, session: AsyncSession, state: FSMContext):
-    # Очищаем состояние, если оно было
     await state.clear()
     
     settings = await orm_get_subscription_settings(session)
@@ -114,7 +113,6 @@ async def admin_price_menu(callback: types.CallbackQuery, session: AsyncSession,
     await callback.answer()
 
 
-# Обновленная функция для обработки цифр (только в состоянии None)
 @admin_router.message(StateFilter(None), F.text.regexp(r'^\d+(\.\d+)?$'))
 async def admin_set_price(message: types.Message, session: AsyncSession):
     try:
@@ -131,7 +129,6 @@ async def admin_set_price(message: types.Message, session: AsyncSession):
 
 @admin_router.callback_query(F.data == "admin_users")
 async def admin_users_menu(callback: types.CallbackQuery, state: FSMContext):
-    # Очищаем состояние
     await state.clear()
     
     text = (
@@ -445,7 +442,6 @@ async def admin_broadcast_process(message: types.Message, state: FSMContext, ses
     keyboard.add(InlineKeyboardButton(text="❌ Нет, отменить", callback_data="cancel_broadcast"))
     keyboard.adjust(1)
     
-    # В зависимости от типа сообщения, показываем разный предпросмотр
     if message.text:
         preview_text = message.text[:500] + "..." if len(message.text) > 500 else message.text
         preview = f"📢 <b>Предпросмотр рассылки</b>\n\n<b>Сообщение:</b>\n{preview_text}\n\n"
