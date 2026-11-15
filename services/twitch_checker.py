@@ -5,17 +5,8 @@ import config
 
 
 def extract_channel_name(url: str) -> str:
-    patterns = [
-        r'twitch\.tv/([^/?]+)',
-        r'twitch\.tv/([^/?]+)/?$',
-    ]
-    
-    for pattern in patterns:
-        match = re.search(pattern, url)
-        if match:
-            return match.group(1).lower()
-    
-    return ""
+    match = re.search(r'twitch\.tv/([^/?]+)', url)
+    return match.group(1).lower() if match else ""
 
 
 def check_channel_online_api(channel_name: str) -> Tuple[bool, int]:
